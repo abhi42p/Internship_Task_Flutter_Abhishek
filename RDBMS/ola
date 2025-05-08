@@ -1,0 +1,168 @@
+create database ola;
+use ola;
+
+create table Drivers(
+driver_id int auto_increment primary key,
+first_name varchar(50),
+last_name varchar(50),
+phone varchar(20),
+city varchar(50),
+vehicle_type enum('sedan','hatchback','suv') not null,
+Rating decimal(2, 1) check (Rating >= 0 and Rating <= 5));
+
+insert into Drivers(driver_id, first_name, last_name, phone, city, vehicle_type, rating) values
+(1, 'Amit', 'Sharma', '9876543210', 'Delhi', 'Sedan', 4.5),
+(2, 'Priya', 'Patel', '9876543211', 'Mumbai', 'SUV', 4.8),
+(3, 'Rahul', 'Kumar', '9876543212', 'Bangalore', 'Hatchback', 4.2),
+(4, 'Sneha', 'Iyer', '9876543213', 'Chennai', 'Sedan', 4.7),
+(5, 'Vikram', 'Singh', '9876543214', 'Kolkata', 'SUV', 4.3),
+(6, 'Neha', 'Mehta', '9876543215', 'Ahmedabad', 'Sedan', 4.9),
+(7, 'Ravi', 'Nair', '9876543216', 'Hyderabad', 'Hatchback', 4.6),
+(8, 'Kiran', 'Reddy', '9876543217', 'Pune', 'SUV', 4.4),
+(9, 'Sita', 'Verma', '9876543218', 'Lucknow', 'Sedan', 4.8),
+(10, 'Rohit', 'Joshi', '9876543219', 'Jaipur', 'Hatchback', 4.1);
+
+
+create table Riders(
+rider_id int auto_increment primary key,
+first_name varchar(50),
+last_name varchar(50),
+phone varchar(20),
+city varchar(50),
+join_date date);
+
+insert into Riders(rider_id, first_name, last_name, phone, city, join_date) values
+(101, 'Aarav', 'Gupta', '8888888881', 'Delhi', '2023-01-15'),
+(102, 'Isha', 'Reddy', '8888888882', 'Mumbai', '2022-12-05'),
+(103, 'Karan', 'Sharma', '8888888883', 'Bangalore', '2023-02-22'),
+(104, 'Pooja', 'Patel', '8888888884', 'Ahmedabad', '2022-10-19'),
+(105, 'Ravi', 'Kumar', '8888888885', 'Chennai', '2023-03-10'),
+(106, 'Ananya', 'Singh', '8888888886', 'Kolkata', '2023-01-30'),
+(107, 'Vishal', 'Verma', '8888888887', 'Hyderabad', '2022-11-12'),
+(108, 'Simran', 'Joshi', '8888888888', 'Pune', '2023-03-25'),
+(109, 'Neha', 'Mehta', '8888888889', 'Lucknow', '2023-04-01'),
+(110, 'Amit', 'Bansal', '8888888890', 'Jaipur', '2023-02-14');
+
+create table Rides(
+ride_id int auto_increment primary key,
+rider_id int,
+driver_id int,
+ride_date datetime,
+pick_up_location varchar(250),
+drop_location varchar(250),
+distance decimal(5,2),
+fare decimal(10,2),
+ride_status enum('Completed', 'Cancelled', 'Ongoing') not null,
+foreign key (rider_id) references Riders(rider_id),
+foreign key (driver_id) REFERENCES Drivers(driver_id));
+
+insert into Rides (ride_id, rider_id, driver_id, ride_date, pick_up_location, drop_location, distance, fare, ride_status) values
+(11, 101, 2, '2023-04-01 08:30:00', 'Connaught Place, Delhi', 'Indira Gandhi Airport, Delhi', 15, 300, 'Completed'),
+(22, 102, 3, '2023-04-02 09:00:00', 'Colaba, Mumbai', 'Bandra, Mumbai', 10, 250, 'Completed'),
+(33, 103, 4, '2023-04-03 10:15:00', 'MG Road, Bangalore', 'Kormanagala, Bangalore', 12, 275, 'Completed'),
+(44, 104, 5, '2023-04-04 12:30:00', 'Ellis Bridge, Ahmedabad', 'Sarkhej, Ahmedabad', 18, 350, 'Cancelled'),
+(55, 105, 6, '2023-04-05 14:00:00', 'T Nagar, Chennai', 'Mylapore, Chennai', 8, 200, 'Completed'),
+(66, 106, 7, '2023-04-06 16:45:00', 'Salt Lake, Kolkata', 'Park Street, Kolkata', 6, 150, 'Ongoing'),
+(77, 107, 8, '2023-04-07 18:00:00', 'Gachibowli, Hyderabad', 'Banjara Hills, Hyderabad', 14, 280, 'Completed'),
+(88, 108, 9, '2023-04-08 09:30:00', 'Aundh, Pune', 'Koregaon Park, Pune', 20, 400, 'Completed'),
+(99, 109, 10, '2023-04-09 11:15:00', 'Hazratganj, Lucknow', 'Alambagh, Lucknow', 10, 225, 'Ongoing'),
+(100, 110, 1, '2023-04-10 07:30:00', 'Jaipur Railway Station, Jaipur', 'Hawa Mahal, Jaipur', 5, 150, 'Cancelled');
+
+create table Payments (
+payment_id int auto_increment primary key,
+ride_id int,
+payment_method enum('Card', 'Cash', 'Wallet') not null,
+amount decimal(10, 2),
+payment_date datetime,
+foreign key (ride_id) references Rides(ride_id));
+
+
+insert into Payments (payment_id, ride_id, payment_method, amount, payment_date) values
+(1, 11, 'Card', 300.00, '2023-04-01 09:00:00'),
+(2, 22, 'Cash', 250.00, '2023-04-02 09:30:00'),
+(3, 33, 'Wallet', 275.00, '2023-04-03 10:30:00'),
+(4, 44, 'Card', 350.00, '2023-04-04 13:00:00'),
+(5, 55, 'Cash', 200.00, '2023-04-05 14:30:00'),
+(6, 66, 'Wallet', 150.00, '2023-04-06 17:00:00'),
+(7, 77, 'Card', 280.00, '2023-04-07 18:30:00'),
+(8, 88, 'Cash', 400.00, '2023-04-08 10:00:00'),
+(9, 99, 'Card', 225.00, '2023-04-09 12:00:00'),
+(10, 100, 'Wallet', 150.00, '2023-04-10 08:00:00');
+
+
+#Q1. Retrieve the names and contact details of all drivers with a rating of 4.5 or higher.
+   
+select first_name, last_name, phone, city, vehicle_type, rating from Drivers where Rating >= 4.5;
+
+
+
+#Q2. Find the total number of rides completed by each driver. 
+   
+select d.driver_id, d.first_name, d.last_name, count(r.ride_id) as TotalRides from Drivers d
+join Rides r on d.driver_id = r.driver_id
+where r.ride_status = 'Completed'
+group by d.driver_id;
+
+
+#Q3. List all riders who have never booked a ride.
+
+select r.first_name, r.last_name, r.phone, r.city from Riders r 
+left join Rides ri on r.rider_id = r.rider_id where ri.ride_id = null;
+
+
+#Q4. Calculate the total earnings of each driver from completed rides.
+  
+select d.driver_id, d.first_name, d.last_name, sum(p.amount) as TotalEarnings
+from Drivers d JOIN Rides r ON d.driver_id = r.driver_id
+join Payments p ON r.ride_id = p.ride_id
+where r.ride_status = 'Completed'
+group by d.driver_id;
+
+
+#Q5. Retrieve the most recent ride for each rider.  
+
+select r.rider_id, r.first_name, r.last_name, ri.ride_id, ri.ride_date,ri.pick_up_location, ri.drop_location from Riders r
+join Rides ri on r.rider_id = ri.rider_id
+where ri.ride_date = (select max(ride_date) from Rides where rider_id = r.rider_id);
+
+
+#Q6. Count the number of rides taken in each city.
+
+	select r.City, count(ri.ride_id) as NumberOfRides
+	from Riders r
+	join Rides ri on r.rider_id = ri.rider_id
+	group by r.City;
+
+
+#Q7. List all rides where the distance was greater than 20 km.
+
+	select ri.ride_id, ri.rider_id, ri.driver_id, ri.ride_date, ri.distance from Rides ri where ri.distance > 20;
+
+
+#Q8. Identify the most preferred payment method.
+	
+	select p.payment_method, count(p.payment_id) as payment_count
+	from Payments p
+	group by p.payment_method
+	order by payment_count desc limit 1;
+
+
+
+#Q9. Find the top 3 highest-earning drivers.	
+
+	select d.driver_id, d.first_name, d.last_name, sum(p.amount) as TotalEarnings from Drivers d
+	join Rides r on d.driver_id = r.driver_id
+	join Payments p on r.ride_id = p.ride_id
+	where r.ride_status = 'Completed'
+	group by d.driver_id
+	order by TotalEarnings desc limit 3;
+
+
+
+#Q10. Retrieve details of all cancelled rides along with the rider's and driver's names.
+	
+	select ri.ride_id, r.first_name as RiderFirstName, r.last_name as 	RiderLastName, 
+	d.first_name AS DriverFirstName, d.last_name as DriverLastName, ri.ride_date, ri.pick_up_location, 	ri.drop_location
+	from Rides ri join Riders r on ri.rider_id = r.rider_id
+	join Drivers d on ri.driver_id = d.driver_id
+	where ri.ride_status = 'Cancelled';
